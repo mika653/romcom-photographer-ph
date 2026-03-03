@@ -166,14 +166,18 @@ export default function App() {
           <div className="md:col-span-4 flex flex-col items-start md:items-end justify-between">
             <div className="flex space-x-8 mb-8 md:mb-0">
               <a
-                href="#"
+                href="https://www.instagram.com/romcomphotogph/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white/70 hover:text-brand-accent transition-colors"
                 aria-label="Follow us on Instagram"
               >
                 <Instagram size={18} />
               </a>
               <a
-                href="#"
+                href="https://www.facebook.com/profile.php?id=61579153232150"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="text-white/70 hover:text-brand-accent transition-colors"
                 aria-label="Follow us on Facebook"
               >
@@ -185,7 +189,7 @@ export default function App() {
                 Based in Manila, PH
               </p>
               <p className="text-[11px] text-white/50 uppercase tracking-[0.35em]">
-                &copy; 2025 Rom Com Photographer PH
+                &copy; 2026 Rom Com Photographer PH
               </p>
             </div>
           </div>
@@ -709,8 +713,7 @@ function ContactPage() {
             Let's Tell <br /> Your Story
           </h1>
           <p className="text-editorial-serif text-brand-muted mb-24 max-w-md">
-            Currently accepting a limited number of cinematic sessions for 2025
-            & 2026.
+            Currently booking for Q2 2026.
           </p>
 
           <div className="space-y-16">
@@ -728,13 +731,17 @@ function ContactPage() {
               </h3>
               <div className="flex space-x-16 mt-6">
                 <a
-                  href="#"
+                  href="https://www.instagram.com/romcomphotogph/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-brand-accent transition-colors text-editorial-cap"
                 >
                   Instagram
                 </a>
                 <a
-                  href="#"
+                  href="https://www.facebook.com/profile.php?id=61579153232150"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="hover:text-brand-accent transition-colors text-editorial-cap"
                 >
                   Facebook
