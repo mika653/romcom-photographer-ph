@@ -73,6 +73,7 @@
   .tab[data-style="grid"] .dot { background: #1C3D2A; }
   .tab[data-style="bento"] .dot { background: #C4956A; }
   .tab[data-style="minimalist"] .dot { background: #C8C0B4; }
+  .tab[data-style="film"] .dot { background: #D4A54A; }
 
   /* Iframe container */
   .preview-area {
@@ -177,6 +178,7 @@
   <button class="tab" data-style="grid"><span class="dot"></span>Grid</button>
   <button class="tab" data-style="bento"><span class="dot"></span>Bento</button>
   <button class="tab" data-style="minimalist"><span class="dot"></span>Minimalist</button>
+  <button class="tab" data-style="film"><span class="dot"></span>Film</button>
 </div>
 
 <div class="preview-area">
@@ -201,7 +203,8 @@
     { id: 'elegant', name: 'Elegant', desc: 'Black & champagne gold, editorial', file: 'elegant.html' },
     { id: 'grid', name: 'Grid', desc: 'Masonry columns, Swiss-design', file: 'grid.html' },
     { id: 'bento', name: 'Bento', desc: 'Apple-inspired cards, soft shadows', file: 'bento.html' },
-    { id: 'minimalist', name: 'Minimalist', desc: 'Whitespace-driven, typographic', file: 'minimalist.html' }
+    { id: 'minimalist', name: 'Minimalist', desc: 'Whitespace-driven, typographic', file: 'minimalist.html' },
+    { id: 'film', name: 'Film', desc: '80s/90s VHS nostalgia, warm analog', file: 'film.html' }
   ];
 
   let currentIdx = 0;
@@ -245,7 +248,7 @@
   document.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowRight') switchStyle((currentIdx + 1) % styles.length);
     if (e.key === 'ArrowLeft') switchStyle((currentIdx - 1 + styles.length) % styles.length);
-    if (e.key >= '1' && e.key <= '5') switchStyle(parseInt(e.key) - 1);
+    if (e.key >= '1' && e.key <= '6') switchStyle(parseInt(e.key) - 1);
   });
 
   // Show info on load

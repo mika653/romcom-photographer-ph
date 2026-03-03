@@ -1,0 +1,2511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rom Com Photographer PH — Your RomCom Moments in Photos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Dancing+Script:wght@600;700&family=Barlow+Condensed:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================
+       RESET & BASE
+    ========================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black:      #1A1612;
+      --gold:       #D4A54A;
+      --gold-light: #E8C47A;
+      --cream:      #F8F3EB;
+      --cream-dark: #EDE5D6;
+      --teal:       #5B8A8A;
+      --teal-faded: #7AABAB;
+      --charcoal:   #3D352E;
+      --amber:      #C8843A;
+      --rust:       #9B4F2A;
+      --warm-white: #FAF6F0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background-color: var(--cream);
+      color: var(--charcoal);
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 400;
+      font-size: 18px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* =========================================================
+       FILM GRAIN OVERLAY
+    ========================================================= */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0.045;
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 200px 200px;
+    }
+
+    /* =========================================================
+       SCANLINE TEXTURE (very subtle)
+    ========================================================= */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9998;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 0, 0, 0.012) 2px,
+        rgba(0, 0, 0, 0.012) 4px
+      );
+    }
+
+    /* =========================================================
+       UTILITY
+    ========================================================= */
+    .container {
+      width: 100%;
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.75s ease, transform 0.75s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+    }
+
+    /* =========================================================
+       SECTION LABEL — "NOW PLAYING" STYLE
+    ========================================================= */
+    .cinema-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.78rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .cinema-label::before,
+    .cinema-label::after {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.7;
+    }
+
+    /* =========================================================
+       NAVBAR
+    ========================================================= */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      padding: 0.9rem 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(26, 22, 18, 0.92) 0%,
+        rgba(26, 22, 18, 0.0) 100%
+      );
+      backdrop-filter: blur(2px);
+      transition: background 0.4s ease, padding 0.4s ease;
+    }
+
+    .navbar.scrolled {
+      background: rgba(26, 22, 18, 0.96);
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(212, 165, 74, 0.2);
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    .navbar-logo img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1.5px solid rgba(212, 165, 74, 0.5);
+      filter: sepia(20%) brightness(0.95);
+    }
+
+    .navbar-brand {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.3rem;
+      color: var(--cream);
+      line-height: 1.1;
+      font-weight: 700;
+    }
+
+    .navbar-brand span {
+      display: block;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 400;
+    }
+
+    .navbar-nav {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .navbar-nav a {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(248, 243, 235, 0.75);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .navbar-nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--gold);
+      transition: width 0.25s ease;
+    }
+
+    .navbar-nav a:hover {
+      color: var(--gold-light);
+    }
+
+    .navbar-nav a:hover::after {
+      width: 100%;
+    }
+
+    .navbar-cta {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--black);
+      background: var(--gold);
+      padding: 0.5rem 1.3rem;
+      border-radius: 2px;
+      white-space: nowrap;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .navbar-cta:hover {
+      background: var(--gold-light);
+    }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--cream);
+      border-radius: 2px;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      background: rgba(26, 22, 18, 0.98);
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .mobile-menu.open {
+      display: flex;
+    }
+
+    .mobile-menu a {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.5rem;
+      color: var(--cream);
+      letter-spacing: 0.08em;
+      transition: color 0.2s;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--gold);
+    }
+
+    .mobile-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      background: none;
+      border: none;
+      color: var(--cream);
+      font-size: 2rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    @media (max-width: 768px) {
+      .navbar-nav,
+      .navbar-cta {
+        display: none;
+      }
+      .hamburger {
+        display: flex;
+      }
+    }
+
+    /* =========================================================
+       HERO
+    ========================================================= */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 6rem;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background-image: url('https://images.unsplash.com/photo-1516051662687-567d7c4e8f6a?auto=format&fit=crop&q=80&w=2000');
+      background-size: cover;
+      background-position: center 30%;
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+
+    .hero-bg.loaded {
+      transform: scale(1);
+    }
+
+    /* Warm film color grade */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(
+          to top,
+          rgba(26, 22, 18, 0.88) 0%,
+          rgba(26, 22, 18, 0.35) 55%,
+          rgba(40, 28, 18, 0.25) 100%
+        ),
+        linear-gradient(
+          135deg,
+          rgba(200, 132, 58, 0.18) 0%,
+          transparent 60%
+        );
+    }
+
+    /* VHS date stamp */
+    .hero-timestamp {
+      position: absolute;
+      top: 7rem;
+      right: 2.5rem;
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      color: rgba(212, 165, 74, 0.75);
+      letter-spacing: 0.1em;
+      line-height: 1.5;
+      text-align: right;
+    }
+
+    .hero-timestamp .timecode {
+      font-size: 0.65rem;
+      color: rgba(212, 165, 74, 0.5);
+      display: block;
+    }
+
+    /* Chromatic aberration on hero title */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .hero-eyebrow::before {
+      content: '▶';
+      font-size: 0.6rem;
+      animation: blink-play 2s step-end infinite;
+    }
+
+    @keyframes blink-play {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hero-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 9vw, 7.5rem);
+      line-height: 0.92;
+      color: var(--warm-white);
+      letter-spacing: 0.03em;
+      margin-bottom: 0.6rem;
+      position: relative;
+    }
+
+    /* Chromatic aberration effect */
+    .hero-title .chr {
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title .chr::before {
+      content: attr(data-text);
+      position: absolute;
+      left: -2px;
+      top: 0;
+      color: rgba(200, 80, 80, 0.25);
+      pointer-events: none;
+    }
+
+    .hero-title .chr::after {
+      content: attr(data-text);
+      position: absolute;
+      left: 2px;
+      top: 0;
+      color: rgba(80, 180, 200, 0.2);
+      pointer-events: none;
+    }
+
+    .hero-script {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.6rem, 4vw, 2.8rem);
+      color: var(--gold-light);
+      font-weight: 600;
+      margin-bottom: 1.75rem;
+      line-height: 1.2;
+    }
+
+    .hero-desc {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1.05rem;
+      color: rgba(248, 243, 235, 0.72);
+      max-width: 520px;
+      line-height: 1.65;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .hero-actions {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.18em;
+      color: var(--black);
+      background: var(--gold);
+      padding: 0.85rem 2.4rem;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 60%);
+    }
+
+    .btn-primary:hover {
+      background: var(--gold-light);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: rgba(248, 243, 235, 0.75);
+      transition: color 0.2s;
+    }
+
+    .btn-secondary:hover {
+      color: var(--gold-light);
+    }
+
+    .btn-secondary .play-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(212, 165, 74, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: var(--gold-light);
+      flex-shrink: 0;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-secondary:hover .play-icon {
+      background: rgba(212, 165, 74, 0.12);
+      border-color: var(--gold);
+    }
+
+    /* Booking badge */
+    .booking-badge {
+      position: absolute;
+      bottom: 6.5rem;
+      right: 2.5rem;
+      background: rgba(212, 165, 74, 0.12);
+      border: 1px solid rgba(212, 165, 74, 0.3);
+      border-radius: 4px;
+      padding: 0.7rem 1rem;
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+
+    .booking-badge .badge-top {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 0.2rem;
+    }
+
+    .booking-badge .badge-main {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.15rem;
+      color: var(--cream);
+      letter-spacing: 0.08em;
+      display: block;
+    }
+
+    .booking-badge .badge-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.65rem;
+      color: rgba(248, 243, 235, 0.5);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 2.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: rgba(248, 243, 235, 0.4);
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint .wheel {
+      width: 22px;
+      height: 36px;
+      border: 1.5px solid rgba(248, 243, 235, 0.3);
+      border-radius: 11px;
+      position: relative;
+    }
+
+    .scroll-hint .wheel::before {
+      content: '';
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 7px;
+      background: rgba(212, 165, 74, 0.5);
+      border-radius: 2px;
+      animation: scroll-wheel 2s ease infinite;
+    }
+
+    @keyframes scroll-wheel {
+      0%   { top: 5px; opacity: 1; }
+      100% { top: 18px; opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .hero { padding-bottom: 5rem; }
+      .booking-badge { display: none; }
+      .hero-timestamp { top: 5.5rem; right: 1rem; }
+    }
+
+    /* =========================================================
+       ABOUT SECTION
+    ========================================================= */
+    .about {
+      padding: 7rem 0;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about::before {
+      content: '';
+      position: absolute;
+      top: -1px;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--black), transparent);
+    }
+
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+
+    .about-img-wrap {
+      position: relative;
+    }
+
+    .about-img-frame {
+      position: relative;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .about-img-frame img {
+      width: 100%;
+      height: 560px;
+      object-fit: cover;
+      object-position: center top;
+      filter: sepia(18%) contrast(1.05) brightness(0.97) saturate(0.9);
+      border-radius: 4px;
+      display: block;
+    }
+
+    /* Film vignette on about photo */
+    .about-img-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 22, 18, 0.45) 100%);
+      border-radius: 4px;
+    }
+
+    /* Decorative film strip on the side */
+    .film-strip-side {
+      position: absolute;
+      right: -22px;
+      top: 0;
+      bottom: 0;
+      width: 18px;
+      background: var(--black);
+      border-radius: 2px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-around;
+      padding: 12px 0;
+      gap: 0;
+    }
+
+    .film-strip-side::before,
+    .film-strip-side::after {
+      display: none;
+    }
+
+    .sprocket-hole {
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--cream-dark);
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+
+    .about-polaroid {
+      position: absolute;
+      bottom: -24px;
+      left: -24px;
+      background: var(--warm-white);
+      padding: 10px 10px 30px;
+      border-radius: 2px;
+      box-shadow: 0 8px 32px rgba(26, 22, 18, 0.28);
+      transform: rotate(-3deg);
+      max-width: 150px;
+    }
+
+    .about-polaroid img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      filter: sepia(30%) saturate(0.8) brightness(1.02);
+    }
+
+    .about-polaroid .caption {
+      font-family: 'Dancing Script', cursive;
+      font-size: 0.8rem;
+      color: var(--charcoal);
+      text-align: center;
+      margin-top: 0.5rem;
+      line-height: 1.2;
+    }
+
+    .about-content h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      line-height: 1;
+      color: var(--black);
+      letter-spacing: 0.04em;
+      margin-bottom: 1.2rem;
+    }
+
+    .about-content h2 em {
+      font-style: normal;
+      color: var(--amber);
+    }
+
+    .about-script {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: var(--teal);
+      margin-bottom: 1.5rem;
+      font-weight: 600;
+    }
+
+    .about-text {
+      font-size: 1rem;
+      color: var(--charcoal);
+      line-height: 1.75;
+      margin-bottom: 1.25rem;
+      font-weight: 300;
+    }
+
+    .about-text strong {
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .about-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .about-divider::before,
+    .about-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(212, 165, 74, 0.4));
+    }
+
+    .about-divider::after {
+      background: linear-gradient(to left, transparent, rgba(212, 165, 74, 0.4));
+    }
+
+    .about-divider span {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .about-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 1.25rem 0.75rem;
+      background: var(--cream-dark);
+      border-radius: 4px;
+      border: 1px solid rgba(212, 165, 74, 0.2);
+      position: relative;
+    }
+
+    .stat-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--gold);
+      opacity: 0.5;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 2.2rem;
+      color: var(--amber);
+      line-height: 1;
+      display: block;
+      letter-spacing: 0.04em;
+    }
+
+    .stat-label {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.62rem;
+      letter-spacing: 0.14em;
+      color: var(--charcoal);
+      text-transform: uppercase;
+      display: block;
+      margin-top: 0.3rem;
+      opacity: 0.75;
+    }
+
+    @media (max-width: 900px) {
+      .about-grid {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .about-img-frame img { height: 400px; }
+    }
+
+    @media (max-width: 480px) {
+      .about-stats { grid-template-columns: repeat(3, 1fr); gap: 0.75rem; }
+      .stat-num { font-size: 1.6rem; }
+    }
+
+    /* =========================================================
+       PORTFOLIO — FILM STRIP SECTION
+    ========================================================= */
+    .portfolio {
+      padding: 7rem 0;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Warm ambient glow */
+    .portfolio::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60%;
+      height: 300px;
+      background: radial-gradient(ellipse, rgba(212, 165, 74, 0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .portfolio-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .portfolio-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.5rem, 6vw, 4.2rem);
+      color: var(--cream);
+      letter-spacing: 0.06em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .portfolio-header p {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      color: rgba(248, 243, 235, 0.5);
+      font-weight: 300;
+      letter-spacing: 0.05em;
+      max-width: 460px;
+      margin: 0 auto;
+    }
+
+    /* ---- Film strip row ---- */
+    .film-strip {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    /* Top and bottom sprocket rows */
+    .sprocket-row {
+      height: 28px;
+      background: var(--black);
+      border-top: 2px solid rgba(248, 243, 235, 0.06);
+      border-bottom: 2px solid rgba(248, 243, 235, 0.06);
+      display: flex;
+      align-items: center;
+      padding: 0 8px;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .sprocket-row.top { margin-bottom: 2px; }
+    .sprocket-row.bottom { margin-top: 2px; }
+
+    .sprocket-h {
+      flex-shrink: 0;
+      width: 16px;
+      height: 14px;
+      border-radius: 2px;
+      background: rgba(248, 243, 235, 0.08);
+      border: 1px solid rgba(248, 243, 235, 0.12);
+    }
+
+    /* Frame counter */
+    .film-frame-counter {
+      display: flex;
+      gap: 0;
+      overflow: hidden;
+    }
+
+    .frame-num {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.55rem;
+      color: rgba(248, 243, 235, 0.15);
+      padding: 0 8px;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    /* Photo grid inside the strip */
+    .strip-photos {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      background: #111;
+    }
+
+    .strip-photo {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 3/4;
+    }
+
+    .strip-photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: sepia(15%) contrast(1.06) brightness(0.93) saturate(0.88);
+      transition: filter 0.5s ease, transform 0.6s ease;
+      display: block;
+    }
+
+    .strip-photo:hover img {
+      filter: sepia(8%) contrast(1.1) brightness(1.02) saturate(1.0);
+      transform: scale(1.04);
+    }
+
+    .strip-photo::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.5) 100%);
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    /* Hover overlay with caption */
+    .strip-photo-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: linear-gradient(to top, rgba(26, 22, 18, 0.85) 0%, transparent 55%);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.25rem;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+    }
+
+    .strip-photo:hover .strip-photo-overlay {
+      opacity: 1;
+    }
+
+    .overlay-num {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      color: var(--gold);
+      letter-spacing: 0.18em;
+      margin-bottom: 0.3rem;
+    }
+
+    .overlay-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      color: var(--cream);
+      letter-spacing: 0.1em;
+      line-height: 1.1;
+    }
+
+    .overlay-sub {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.72rem;
+      color: rgba(248, 243, 235, 0.55);
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      margin-top: 0.15rem;
+    }
+
+    /* Second strip row */
+    .strip-photos-row2 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    .portfolio-footer {
+      text-align: center;
+      margin-top: 3.5rem;
+    }
+
+    .btn-outline-gold {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      border: 1.5px solid rgba(212, 165, 74, 0.5);
+      padding: 0.85rem 2.5rem;
+      border-radius: 2px;
+      transition: background 0.2s, color 0.2s, border-color 0.2s;
+    }
+
+    .btn-outline-gold:hover {
+      background: rgba(212, 165, 74, 0.1);
+      border-color: var(--gold);
+    }
+
+    @media (max-width: 640px) {
+      .strip-photos { grid-template-columns: 1fr 1fr; }
+      .strip-photos-row2 { grid-template-columns: 1fr 1fr; }
+    }
+
+    /* =========================================================
+       SERVICES
+    ========================================================= */
+    .services {
+      padding: 7rem 0;
+      background: var(--cream-dark);
+      position: relative;
+    }
+
+    .services-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .services-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      color: var(--black);
+      letter-spacing: 0.05em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .services-header p {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      color: rgba(61, 53, 46, 0.65);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+    }
+
+    .service-card {
+      background: var(--warm-white);
+      border-radius: 4px;
+      padding: 2.25rem 1.75rem;
+      border: 1px solid rgba(212, 165, 74, 0.18);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--amber), var(--gold));
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(26, 22, 18, 0.12);
+    }
+
+    .service-num {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.65rem;
+      color: var(--gold);
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    .service-icon {
+      font-size: 1.75rem;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    .service-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.5rem;
+      color: var(--black);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.75rem;
+      line-height: 1.05;
+    }
+
+    .service-desc {
+      font-size: 0.92rem;
+      color: var(--charcoal);
+      line-height: 1.7;
+      font-weight: 300;
+      opacity: 0.85;
+    }
+
+    .service-footer {
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(212, 165, 74, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .service-starting {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.62rem;
+      color: rgba(61, 53, 46, 0.5);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .service-price {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      color: var(--amber);
+      letter-spacing: 0.06em;
+    }
+
+    @media (max-width: 900px) {
+      .services-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 580px) {
+      .services-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       TESTIMONIALS — CINEMA THEMED
+    ========================================================= */
+    .testimonials {
+      padding: 7rem 0;
+      background: var(--black);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .testimonials::before {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(212, 165, 74, 0.25), transparent);
+    }
+
+    .testimonials-header {
+      text-align: center;
+      margin-bottom: 4rem;
+    }
+
+    .testimonials-header h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      color: var(--cream);
+      letter-spacing: 0.06em;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+    }
+
+    .testimonials-header p {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      color: rgba(248, 243, 235, 0.45);
+      font-weight: 300;
+      letter-spacing: 0.04em;
+    }
+
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.75rem;
+    }
+
+    .review-card {
+      background: rgba(248, 243, 235, 0.04);
+      border: 1px solid rgba(212, 165, 74, 0.12);
+      border-radius: 4px;
+      padding: 2rem 1.75rem;
+      position: relative;
+      transition: background 0.3s ease;
+    }
+
+    .review-card:hover {
+      background: rgba(248, 243, 235, 0.07);
+    }
+
+    /* Cinema ticket top */
+    .review-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(to right, var(--teal), var(--gold));
+      opacity: 0.5;
+      border-radius: 4px 4px 0 0;
+    }
+
+    .review-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 1.25rem;
+      gap: 1rem;
+    }
+
+    /* Two thumbs up rating */
+    .review-rating {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.2rem;
+      flex-shrink: 0;
+    }
+
+    .thumbs {
+      font-size: 1.1rem;
+      filter: sepia(0.3);
+    }
+
+    .rating-label {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.55rem;
+      color: var(--gold);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .review-quote-mark {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 4rem;
+      color: rgba(212, 165, 74, 0.18);
+      line-height: 0.6;
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+
+    .review-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 0.98rem;
+      color: rgba(248, 243, 235, 0.75);
+      line-height: 1.7;
+      font-weight: 300;
+      font-style: italic;
+      margin-bottom: 1.5rem;
+    }
+
+    .review-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(248, 243, 235, 0.07);
+      padding-top: 1rem;
+    }
+
+    .reviewer-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .reviewer-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.08em;
+    }
+
+    .reviewer-context {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      color: rgba(212, 165, 74, 0.65);
+      letter-spacing: 0.12em;
+    }
+
+    .review-timecode {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      color: rgba(248, 243, 235, 0.2);
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 900px) {
+      .testimonials-grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 580px) {
+      .testimonials-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       CONTACT / CTA
+    ========================================================= */
+    .contact {
+      padding: 8rem 0;
+      background: var(--cream);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Warm gradient background */
+    .contact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse at 20% 50%, rgba(200, 132, 58, 0.08) 0%, transparent 60%),
+        radial-gradient(ellipse at 80% 50%, rgba(91, 138, 138, 0.06) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .contact-inner {
+      position: relative;
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .contact-inner h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.5rem);
+      color: var(--black);
+      letter-spacing: 0.04em;
+      line-height: 0.95;
+      margin-bottom: 0.75rem;
+    }
+
+    .contact-script {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.6rem;
+      color: var(--amber);
+      margin-bottom: 1.5rem;
+      display: block;
+      font-weight: 600;
+    }
+
+    .contact-desc {
+      font-size: 1rem;
+      color: rgba(61, 53, 46, 0.7);
+      line-height: 1.75;
+      font-weight: 300;
+      margin-bottom: 2.75rem;
+    }
+
+    .contact-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      text-align: left;
+    }
+
+    .form-field label {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      background: var(--cream-dark);
+      border: 1px solid rgba(212, 165, 74, 0.25);
+      border-radius: 3px;
+      padding: 0.8rem 1rem;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 1rem;
+      color: var(--charcoal);
+      font-weight: 400;
+      transition: border-color 0.2s;
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+
+    .form-field input::placeholder,
+    .form-field textarea::placeholder {
+      color: rgba(61, 53, 46, 0.35);
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      border-color: rgba(212, 165, 74, 0.6);
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .contact-actions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .btn-primary-dark {
+      display: inline-block;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 0.2em;
+      color: var(--cream);
+      background: var(--black);
+      padding: 1rem 3rem;
+      border-radius: 2px;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-primary-dark::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1.5px;
+      background: linear-gradient(to right, var(--amber), var(--gold));
+    }
+
+    .btn-primary-dark:hover {
+      background: var(--charcoal);
+      transform: translateY(-1px);
+    }
+
+    .contact-alt {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      color: rgba(61, 53, 46, 0.5);
+      text-transform: uppercase;
+    }
+
+    .contact-alt a {
+      color: var(--amber);
+      text-decoration: underline;
+      text-decoration-color: rgba(200, 132, 58, 0.4);
+      transition: color 0.2s;
+    }
+
+    .contact-alt a:hover {
+      color: var(--gold);
+    }
+
+    @media (max-width: 580px) {
+      .form-row { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       FOOTER
+    ========================================================= */
+    .footer {
+      background: var(--black);
+      padding: 4rem 0 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, rgba(212, 165, 74, 0.3), transparent);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 3rem;
+      margin-bottom: 3rem;
+    }
+
+    .footer-brand .brand-name {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: var(--cream);
+      font-weight: 700;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .footer-brand .brand-tagline {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      color: var(--gold);
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.88rem;
+      color: rgba(248, 243, 235, 0.4);
+      font-weight: 300;
+      line-height: 1.7;
+      max-width: 280px;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .social-link {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 165, 74, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(248, 243, 235, 0.5);
+      font-size: 0.85rem;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+
+    .social-link:hover {
+      border-color: var(--gold);
+      color: var(--gold);
+      background: rgba(212, 165, 74, 0.08);
+    }
+
+    .footer-col h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      color: var(--cream);
+      letter-spacing: 0.14em;
+      margin-bottom: 1.25rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .footer-col ul li a {
+      font-size: 0.85rem;
+      color: rgba(248, 243, 235, 0.4);
+      font-weight: 300;
+      transition: color 0.2s;
+      letter-spacing: 0.04em;
+    }
+
+    .footer-col ul li a:hover {
+      color: var(--gold-light);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(248, 243, 235, 0.06);
+      padding-top: 1.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-copy {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.62rem;
+      color: rgba(248, 243, 235, 0.25);
+      letter-spacing: 0.12em;
+    }
+
+    .footer-reel {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.6rem;
+      color: rgba(248, 243, 235, 0.18);
+      letter-spacing: 0.1em;
+    }
+
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+
+    /* =========================================================
+       MISC ACCENT ELEMENTS
+    ========================================================= */
+
+    /* Film edge burn at section breaks */
+    .burn-top {
+      height: 3px;
+      background: linear-gradient(to right,
+        rgba(26, 22, 18, 0.8),
+        rgba(212, 165, 74, 0.15) 30%,
+        rgba(200, 132, 58, 0.2) 50%,
+        rgba(212, 165, 74, 0.15) 70%,
+        rgba(26, 22, 18, 0.8)
+      );
+    }
+
+    /* Warm vignette on full-width images */
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(26, 22, 18, 0.55) 100%);
+      pointer-events: none;
+    }
+
+    /* =========================================================
+       STICKY BOOKING RIBBON
+    ========================================================= */
+    .booking-ribbon {
+      background: var(--gold);
+      padding: 0.5rem 0;
+      text-align: center;
+      position: relative;
+      z-index: 1001;
+    }
+
+    .booking-ribbon p {
+      font-family: 'Special Elite', cursive;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--black);
+    }
+
+    .booking-ribbon strong {
+      font-weight: inherit;
+      text-decoration: underline;
+      text-decoration-color: rgba(26, 22, 18, 0.4);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- BOOKING RIBBON -->
+  <div class="booking-ribbon">
+    <p>Now Booking <strong>Q2 2026</strong> &nbsp;&#x2015;&nbsp; Limited Slots Available &nbsp;&#x2015;&nbsp; Inquire Today</p>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <ul class="mobile-menu" id="mobileMenu" role="dialog" aria-label="Mobile navigation">
+    <button class="mobile-close" id="mobileClose" aria-label="Close menu">&times;</button>
+    <li><a href="#about" onclick="closeMobileMenu()">About</a></li>
+    <li><a href="#portfolio" onclick="closeMobileMenu()">Portfolio</a></li>
+    <li><a href="#services" onclick="closeMobileMenu()">Services</a></li>
+    <li><a href="#testimonials" onclick="closeMobileMenu()">Reviews</a></li>
+    <li><a href="#contact" onclick="closeMobileMenu()">Book Now</a></li>
+  </ul>
+
+  <!-- NAVBAR -->
+  <nav class="navbar" id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="container">
+      <div class="navbar-inner">
+        <a href="#" class="navbar-logo" aria-label="Rom Com Photographer PH home">
+          <img src="/logo.jpg" alt="Rom Com Photographer PH logo" />
+          <div class="navbar-brand">
+            Rom Com PH
+            <span>Photography</span>
+          </div>
+        </a>
+        <ul class="navbar-nav" role="list">
+          <li><a href="#about">About</a></li>
+          <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
+        </ul>
+        <a href="#contact" class="navbar-cta">Book Now</a>
+        <button class="hamburger" id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ===================== HERO ===================== -->
+  <section class="hero" aria-label="Hero">
+    <div class="hero-bg" id="heroBg"></div>
+    <div class="vignette"></div>
+
+    <div class="hero-timestamp" aria-hidden="true">
+      <span>REC &bull; 00:00:01</span>
+      <span class="timecode">2026 &bull; MANILA, PH</span>
+    </div>
+
+    <div class="container hero-content reveal">
+      <p class="hero-eyebrow">Now Playing &mdash; A Love Story</p>
+      <h1 class="hero-title">
+        <span class="chr" data-text="Your RomCom">Your RomCom</span><br>
+        <span class="chr" data-text="Moments">Moments</span>
+      </h1>
+      <p class="hero-script">in Photos &mdash; and in Real Life.</p>
+      <p class="hero-desc">
+        Because every love story deserves to be told like it belongs on the silver screen.
+        Warm. Cinematic. Unmistakably yours.
+      </p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn-primary">Book Your Session</a>
+        <a href="#portfolio" class="btn-secondary">
+          <span class="play-icon" aria-hidden="true">&#9654;</span>
+          View the Reel
+        </a>
+      </div>
+    </div>
+
+    <div class="booking-badge" aria-label="Currently booking Q2 2026">
+      <span class="badge-top">Now Booking</span>
+      <span class="badge-main">Q2 2026</span>
+      <span class="badge-sub">Slots Filling Fast</span>
+    </div>
+
+    <div class="scroll-hint" aria-hidden="true">
+      <div class="wheel"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ===================== ABOUT ===================== -->
+  <section class="about" id="about" aria-label="About">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- Image side -->
+        <div class="about-img-wrap reveal">
+          <div class="about-img-frame">
+            <img
+              src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&q=80&w=1500"
+              alt="Photographer at work with camera"
+              loading="lazy"
+            />
+          </div>
+          <!-- Film strip side decoration -->
+          <div class="film-strip-side" aria-hidden="true">
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+            <div class="sprocket-hole"></div>
+          </div>
+          <!-- Polaroid decoration -->
+          <div class="about-polaroid" aria-hidden="true">
+            <img
+              src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=400"
+              alt=""
+            />
+            <p class="caption">Behind the lens, '26</p>
+          </div>
+        </div>
+
+        <!-- Content side -->
+        <div class="about-content reveal">
+          <div class="cinema-label" aria-label="Section: Feature Presentation">Feature Presentation</div>
+          <h2>The <em>Story</em><br>Behind the Lens</h2>
+          <p class="about-script">"I want to stop the world — and melt with you."</p>
+          <p class="about-text">
+            Hi, I'm the heart behind <strong>Rom Com Photographer PH</strong> &mdash; a Manila-based photographer
+            obsessed with the quiet, unscripted moments that make love look exactly like the movies.
+          </p>
+          <p class="about-text">
+            I grew up on a steady diet of John Hughes films and Saturday afternoon rom-coms, and I've
+            carried that warmth into every frame I shoot. Whether it's the way you reach for each other's
+            hand before the ceremony, or the laugh that sneaks out during the first dance &mdash; those are
+            the frames that tell your real story.
+          </p>
+          <p class="about-text">
+            Think of me as your personal director of photography &mdash; only the story is yours,
+            and it's already beautiful.
+          </p>
+
+          <div class="about-divider" aria-hidden="true">
+            <span>Est. 2020 &bull; Manila</span>
+          </div>
+
+          <div class="about-stats" role="list" aria-label="Statistics">
+            <div class="stat-item" role="listitem">
+              <span class="stat-num">200+</span>
+              <span class="stat-label">Couples</span>
+            </div>
+            <div class="stat-item" role="listitem">
+              <span class="stat-num">6+</span>
+              <span class="stat-label">Yrs Shooting</span>
+            </div>
+            <div class="stat-item" role="listitem">
+              <span class="stat-num">100%</span>
+              <span class="stat-label">Heartfelt</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="burn-top" aria-hidden="true"></div>
+
+  <!-- ===================== PORTFOLIO ===================== -->
+  <section class="portfolio" id="portfolio" aria-label="Portfolio">
+    <div class="container">
+      <div class="portfolio-header reveal">
+        <div class="cinema-label" aria-label="Section: On the Reel">On the Reel</div>
+        <h2>Selected Works</h2>
+        <p>A curated frame from every love story we've had the honor of capturing.</p>
+      </div>
+
+      <!-- Film strip row 1 -->
+      <div class="film-strip reveal" aria-label="Portfolio gallery, row 1">
+        <div class="sprocket-row top" aria-hidden="true">
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+        </div>
+
+        <div class="strip-photos">
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=800"
+              alt="Wedding ceremony moment"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 001</span>
+              <div class="overlay-title">The Ceremony</div>
+              <div class="overlay-sub">Manila, 2025</div>
+            </div>
+          </div>
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&q=80&w=800"
+              alt="Wedding couple portrait"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 002</span>
+              <div class="overlay-title">Golden Hour</div>
+              <div class="overlay-sub">Tagaytay, 2025</div>
+            </div>
+          </div>
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800"
+              alt="Wedding reception dancing"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 003</span>
+              <div class="overlay-title">First Dance</div>
+              <div class="overlay-sub">Batangas, 2025</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sprocket-row bottom" aria-hidden="true">
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+        </div>
+      </div>
+
+      <!-- Film strip row 2 -->
+      <div class="film-strip reveal" aria-label="Portfolio gallery, row 2" style="margin-top: 1.5rem;">
+        <div class="sprocket-row top" aria-hidden="true">
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+        </div>
+
+        <div class="strip-photos strip-photos-row2">
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1543168256-418811576931?auto=format&fit=crop&q=80&w=800"
+              alt="Couple engagement photo"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 004</span>
+              <div class="overlay-title">The Engagement</div>
+              <div class="overlay-sub">Palawan, 2025</div>
+            </div>
+          </div>
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=800"
+              alt="Bride portrait"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 005</span>
+              <div class="overlay-title">Bridal Portraits</div>
+              <div class="overlay-sub">Manila, 2026</div>
+            </div>
+          </div>
+          <div class="strip-photo">
+            <img
+              src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=800"
+              alt="Wedding couple candid"
+              loading="lazy"
+            />
+            <div class="strip-photo-overlay">
+              <span class="overlay-num">Frame 006</span>
+              <div class="overlay-title">Candid Joy</div>
+              <div class="overlay-sub">Cebu, 2026</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sprocket-row bottom" aria-hidden="true">
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+          <div class="sprocket-h"></div><div class="sprocket-h"></div>
+        </div>
+      </div>
+
+      <div class="portfolio-footer reveal">
+        <a
+          href="https://www.instagram.com/romcomphotogph/"
+          class="btn-outline-gold"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="View full portfolio on Instagram"
+        >
+          View Full Portfolio on Instagram
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="burn-top" aria-hidden="true"></div>
+
+  <!-- ===================== SERVICES ===================== -->
+  <section class="services" id="services" aria-label="Services">
+    <div class="container">
+      <div class="services-header reveal">
+        <div class="cinema-label" aria-label="Section: What We Offer">What We Offer</div>
+        <h2>On the Menu</h2>
+        <p>Every love story is different. Every package is built to tell yours.</p>
+      </div>
+
+      <div class="services-grid">
+        <div class="service-card reveal">
+          <div class="service-num">REEL 01</div>
+          <span class="service-icon" aria-hidden="true">&#128149;</span>
+          <h3 class="service-title">The Love Scene</h3>
+          <p class="service-desc">
+            Our signature engagement session. A relaxed two-hour shoot at a location that means something
+            to you &mdash; the coffee shop where you first met, the park where you said "I love you."
+            Thirty-five edited frames, ready to print and treasure.
+          </p>
+          <div class="service-footer">
+            <span class="service-starting">Starting at</span>
+            <span class="service-price">PHP 8,000</span>
+          </div>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay: 0.12s;">
+          <div class="service-num">REEL 02</div>
+          <span class="service-icon" aria-hidden="true">&#127917;</span>
+          <h3 class="service-title">The Feature Film</h3>
+          <p class="service-desc">
+            Full-day wedding coverage &mdash; from the quiet morning prep to the last dance. You'll
+            receive a gallery of 300+ curated images, color-graded with our warm film aesthetic, and
+            delivered within 3&ndash;4 weeks.
+          </p>
+          <div class="service-footer">
+            <span class="service-starting">Starting at</span>
+            <span class="service-price">PHP 35,000</span>
+          </div>
+        </div>
+
+        <div class="service-card reveal" style="transition-delay: 0.24s;">
+          <div class="service-num">REEL 03</div>
+          <span class="service-icon" aria-hidden="true">&#11088;</span>
+          <h3 class="service-title">The Director's Cut</h3>
+          <p class="service-desc">
+            Two photographers, two-day coverage, unlimited consultation calls, a custom photo book,
+            and a dedicated online gallery. For couples who want the whole production &mdash; every
+            frame, every feeling, preserved forever.
+          </p>
+          <div class="service-footer">
+            <span class="service-starting">Starting at</span>
+            <span class="service-price">PHP 65,000</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== TESTIMONIALS ===================== -->
+  <section class="testimonials" id="testimonials" aria-label="Client testimonials">
+    <div class="container">
+      <div class="testimonials-header reveal">
+        <div class="cinema-label" aria-label="Section: Rave Reviews">Rave Reviews</div>
+        <h2>What the Critics Say</h2>
+        <p>Straight from the couples who lived it &mdash; unfiltered, unscripted.</p>
+      </div>
+
+      <div class="testimonials-grid">
+
+        <article class="review-card reveal">
+          <div class="review-header">
+            <span class="review-quote-mark" aria-hidden="true">"</span>
+            <div class="review-rating" aria-label="Rating: Two thumbs up">
+              <span class="thumbs" aria-hidden="true">&#128077;&#128077;</span>
+              <span class="rating-label">Two Thumbs Up</span>
+            </div>
+          </div>
+          <p class="review-text">
+            "She made us feel like the main characters of our own movie. Every photo looks like a still
+            from a film I'd watch on a rainy afternoon. We ugly-cried when we saw our gallery &mdash;
+            the good kind."
+          </p>
+          <div class="review-footer">
+            <div class="reviewer-info">
+              <span class="reviewer-name">Ana &amp; Miguel</span>
+              <span class="reviewer-context">Wedding &bull; Tagaytay, 2025</span>
+            </div>
+            <span class="review-timecode" aria-hidden="true">00:04:32</span>
+          </div>
+        </article>
+
+        <article class="review-card reveal" style="transition-delay: 0.1s;">
+          <div class="review-header">
+            <span class="review-quote-mark" aria-hidden="true">"</span>
+            <div class="review-rating" aria-label="Rating: Two thumbs up">
+              <span class="thumbs" aria-hidden="true">&#128077;&#128077;</span>
+              <span class="rating-label">Two Thumbs Up</span>
+            </div>
+          </div>
+          <p class="review-text">
+            "I have a very non-photogenic husband. Somehow, she captured him looking like he just walked
+            off a John Cusack film. I don't know what sorcery this is, but we're booking again for
+            our anniversary."
+          </p>
+          <div class="review-footer">
+            <div class="reviewer-info">
+              <span class="reviewer-name">Chloe &amp; Ryan</span>
+              <span class="reviewer-context">Engagement &bull; Manila, 2025</span>
+            </div>
+            <span class="review-timecode" aria-hidden="true">01:12:07</span>
+          </div>
+        </article>
+
+        <article class="review-card reveal" style="transition-delay: 0.2s;">
+          <div class="review-header">
+            <span class="review-quote-mark" aria-hidden="true">"</span>
+            <div class="review-rating" aria-label="Rating: Two thumbs up">
+              <span class="thumbs" aria-hidden="true">&#128077;&#128077;</span>
+              <span class="rating-label">Two Thumbs Up</span>
+            </div>
+          </div>
+          <p class="review-text">
+            "The photos don't just look beautiful &mdash; they feel warm, like holding a memory in your
+            hands. Every time I scroll through our gallery, I hear 'Iris' playing in my head.
+            That's exactly the vibe."
+          </p>
+          <div class="review-footer">
+            <div class="reviewer-info">
+              <span class="reviewer-name">Trisha &amp; Paolo</span>
+              <span class="reviewer-context">Wedding &bull; Batangas, 2026</span>
+            </div>
+            <span class="review-timecode" aria-hidden="true">02:38:15</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section class="contact" id="contact" aria-label="Contact and booking">
+    <div class="container">
+      <div class="contact-inner">
+        <div class="reveal">
+          <div class="cinema-label" aria-label="Section: Write Your Story">Write Your Story</div>
+          <h2>Let's Make<br>Your Movie</h2>
+          <span class="contact-script">Every great love story begins with a first scene.</span>
+          <p class="contact-desc">
+            We're currently booking <strong>Q2 2026</strong>. Slots are limited &mdash; like any good
+            limited-run cinema screening &mdash; so reach out while there's still a seat with your name on it.
+          </p>
+        </div>
+
+        <form class="contact-form reveal" onsubmit="handleSubmit(event)" novalidate aria-label="Booking inquiry form">
+          <div class="form-row">
+            <div class="form-field">
+              <label for="name">Your Name(s)</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Ana &amp; Miguel"
+                required
+                autocomplete="name"
+              />
+            </div>
+            <div class="form-field">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="hello@yourstory.com"
+                required
+                autocomplete="email"
+              />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-field">
+              <label for="date">Wedding / Event Date</label>
+              <input
+                type="date"
+                id="date"
+                name="date"
+              />
+            </div>
+            <div class="form-field">
+              <label for="service">Package Interest</label>
+              <select id="service" name="service">
+                <option value="" disabled selected>Select a package...</option>
+                <option value="love-scene">The Love Scene (PHP 8,000)</option>
+                <option value="feature-film">The Feature Film (PHP 35,000)</option>
+                <option value="directors-cut">The Director's Cut (PHP 65,000)</option>
+                <option value="other">Something Else / Let's Chat</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field">
+            <label for="message">Your Love Story (briefly)</label>
+            <textarea
+              id="message"
+              name="message"
+              placeholder="Tell me about how you met, where you're getting married, what moments matter most to you..."
+              rows="4"
+            ></textarea>
+          </div>
+          <div class="contact-actions">
+            <button type="submit" class="btn-primary-dark">Send My Inquiry</button>
+            <p class="contact-alt">
+              Prefer to reach out directly? Find us on
+              <a href="https://www.instagram.com/romcomphotogph/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">Instagram</a>
+              or
+              <a href="https://www.facebook.com/profile.php?id=61579153232150" target="_blank" rel="noopener noreferrer" aria-label="Facebook">Facebook</a>.
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================== FOOTER ===================== -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="brand-name">Rom Com Photographer PH</span>
+          <span class="brand-tagline">Your RomCom Moments in Photos</span>
+          <p>
+            Based in Manila, Philippines. Available for weddings, engagements,
+            and love stories throughout the archipelago &mdash; and wherever the scene takes us.
+          </p>
+          <div class="footer-socials" aria-label="Social media links">
+            <a
+              href="https://www.instagram.com/romcomphotogph/"
+              class="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+              </svg>
+            </a>
+            <a
+              href="https://www.facebook.com/profile.php?id=61579153232150"
+              class="social-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <nav class="footer-col" aria-label="Quick links">
+          <h4>Quick Links</h4>
+          <ul role="list">
+            <li><a href="#about">About</a></li>
+            <li><a href="#portfolio">Portfolio</a></li>
+            <li><a href="#services">Services</a></li>
+            <li><a href="#testimonials">Testimonials</a></li>
+            <li><a href="#contact">Book a Session</a></li>
+          </ul>
+        </nav>
+
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul role="list">
+            <li><a href="#services">The Love Scene</a></li>
+            <li><a href="#services">The Feature Film</a></li>
+            <li><a href="#services">The Director's Cut</a></li>
+            <li><a href="#contact">Custom Package</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p class="footer-copy">
+          &copy; 2026 Rom Com Photographer PH &bull; Manila, Philippines &bull; All Rights Reserved
+        </p>
+        <p class="footer-reel" aria-hidden="true">
+          ROLL &bull; 35mm &bull; ISO 400 &bull; KODAK VISION3
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ===================== SCRIPTS ===================== -->
+  <script>
+    // ---- Navbar scroll behavior ----
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // ---- Hero BG subtle zoom on load ----
+    const heroBg = document.getElementById('heroBg');
+    window.addEventListener('load', () => {
+      heroBg.classList.add('loaded');
+    });
+
+    // ---- Mobile menu ----
+    const hamburger = document.getElementById('hamburger');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileClose = document.getElementById('mobileClose');
+
+    function openMobileMenu() {
+      mobileMenu.classList.add('open');
+      hamburger.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      mobileMenu.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    hamburger.addEventListener('click', openMobileMenu);
+    mobileClose.addEventListener('click', closeMobileMenu);
+
+    // Close on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) {
+        closeMobileMenu();
+      }
+    });
+
+    // ---- IntersectionObserver reveal ----
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (!prefersReducedMotion) {
+      const revealEls = document.querySelectorAll('.reveal');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      revealEls.forEach(el => observer.observe(el));
+    } else {
+      // Immediately show all for reduced motion
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+    }
+
+    // ---- Form submit ----
+    function handleSubmit(e) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type="submit"]');
+      const originalText = btn.textContent;
+      btn.textContent = 'Message Sent!';
+      btn.style.background = '#5B8A8A';
+      btn.disabled = true;
+      setTimeout(() => {
+        btn.textContent = originalText;
+        btn.style.background = '';
+        btn.disabled = false;
+        e.target.reset();
+      }, 3500);
+    }
+
+    // ---- Smooth active nav on scroll ----
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.navbar-nav a');
+
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop - 120;
+        if (window.scrollY >= sectionTop) {
+          current = section.getAttribute('id');
+        }
+      });
+      navLinks.forEach(link => {
+        link.style.color = link.getAttribute('href') === `#${current}`
+          ? 'var(--gold-light)'
+          : '';
+      });
+    }, { passive: true });
+  </script>
+
+</body>
+</html>
