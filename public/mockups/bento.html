@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rom Com Photographer PH — Bento</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=General+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --green: #1C3D2A;
+    --cream: #EDE6D8;
+    --amber: #C4956A;
+    --bg: #F5F0E8;
+    --card: #FFFFFF;
+    --text: #2A2A2A;
+    --muted: #7A7570;
+    --subtle: rgba(0,0,0,0.04);
+    --radius: 20px;
+    --radius-sm: 14px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
+    --shadow-hover: 0 2px 8px rgba(0,0,0,0.06), 0 16px 40px rgba(0,0,0,0.1);
+  }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'General Sans', -apple-system, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* Nav */
+  nav { position: fixed; top: 0; width: 100%; z-index: 100; padding: 1.2rem 2rem; display: flex; justify-content: space-between; align-items: center; transition: all 0.6s; }
+  nav.scrolled { background: rgba(245,240,232,0.8); backdrop-filter: blur(30px) saturate(1.5); border-bottom: 1px solid rgba(0,0,0,0.05); }
+  nav .logo img { height: 34px; }
+  nav ul { list-style: none; display: flex; gap: 2rem; }
+  nav ul a { text-decoration: none; font-size: 12px; font-weight: 500; letter-spacing: 0.04em; color: var(--muted); transition: color 0.3s; }
+  nav ul a:hover { color: var(--green); }
+  .label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* Container */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+  /* Hero Bento */
+  .hero-bento { padding-top: 7rem; }
+  .hero-grid { display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: auto auto; gap: 1rem; }
+  .hero-text-card { background: var(--card); border-radius: var(--radius); padding: 3.5rem; display: flex; flex-direction: column; justify-content: flex-end; box-shadow: var(--shadow); }
+  .hero-text-card .label { color: var(--amber); margin-bottom: 1.5rem; }
+  .hero-text-card h1 { font-family: 'Instrument Serif', serif; font-size: clamp(2.8rem, 6vw, 4.5rem); font-weight: 400; line-height: 1; letter-spacing: -0.02em; }
+  .hero-text-card h1 em { font-style: italic; color: var(--green); }
+  .hero-text-card p { margin-top: 1.5rem; color: var(--muted); font-size: 0.9rem; max-width: 360px; line-height: 1.7; }
+
+  .hero-image-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); position: relative; min-height: 380px; }
+  .hero-image-card img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.5s cubic-bezier(0.22,1,0.36,1); }
+  .hero-image-card:hover img { transform: scale(1.04); }
+  .hero-image-card .badge { position: absolute; bottom: 1.2rem; left: 1.2rem; background: rgba(255,255,255,0.9); backdrop-filter: blur(10px); padding: 0.5rem 1rem; border-radius: 50px; font-size: 11px; font-weight: 500; color: var(--green); }
+
+  .hero-stats { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  .stat-card { background: var(--card); border-radius: var(--radius-sm); padding: 1.5rem 2rem; box-shadow: var(--shadow); text-align: center; transition: transform 0.4s, box-shadow 0.4s; }
+  .stat-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .stat-card .num { font-family: 'Instrument Serif', serif; font-size: 2.5rem; color: var(--green); line-height: 1.1; }
+  .stat-card .stat-label { font-size: 11px; font-weight: 500; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.3rem; }
+
+  /* Bento Portfolio Grid */
+  .portfolio-section { padding: 6rem 0; }
+  .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 2rem; }
+  .section-header h2 { font-family: 'Instrument Serif', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 400; }
+  .section-header .label { color: var(--muted); }
+
+  .bento-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: 280px 280px 280px; gap: 1rem; }
+  .bento-item { position: relative; border-radius: var(--radius-sm); overflow: hidden; box-shadow: var(--shadow); cursor: pointer; transition: transform 0.5s cubic-bezier(0.22,1,0.36,1), box-shadow 0.5s; }
+  .bento-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); }
+  .bento-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(10%); transition: all 1.2s cubic-bezier(0.22,1,0.36,1); }
+  .bento-item:hover img { filter: grayscale(0%); transform: scale(1.06); }
+  .bento-item .overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(28,61,42,0.85) 0%, rgba(28,61,42,0.2) 40%, transparent 100%); opacity: 0; transition: opacity 0.5s; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.5rem; }
+  .bento-item:hover .overlay { opacity: 1; }
+  .bento-item .overlay h3 { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 1.3rem; color: white; margin-bottom: 0.2rem; }
+  .bento-item .overlay span { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); }
+
+  /* Bento positions */
+  .bento-item:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .bento-item:nth-child(2) { grid-column: span 1; }
+  .bento-item:nth-child(3) { grid-column: span 1; }
+  .bento-item:nth-child(4) { grid-column: span 1; }
+  .bento-item:nth-child(5) { grid-column: span 1; }
+  .bento-item:nth-child(6) { grid-column: span 2; }
+  .bento-item:nth-child(7) { grid-column: span 1; }
+  .bento-item:nth-child(8) { grid-column: span 1; }
+
+  /* About Bento */
+  .about-bento { padding: 4rem 0; }
+  .about-grid { display: grid; grid-template-columns: 5fr 3fr; gap: 1rem; }
+  .about-text-card { background: var(--card); border-radius: var(--radius); padding: 3.5rem; box-shadow: var(--shadow); display: flex; flex-direction: column; justify-content: center; }
+  .about-text-card .label { color: var(--amber); margin-bottom: 1rem; }
+  .about-text-card h2 { font-family: 'Instrument Serif', serif; font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 400; font-style: italic; margin-bottom: 1.5rem; line-height: 1.2; }
+  .about-text-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.9; max-width: 480px; }
+  .about-text-card p + p { margin-top: 1rem; }
+  .about-image-card { border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); min-height: 400px; }
+  .about-image-card img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Testimonial */
+  .testimonial-card { background: var(--green); border-radius: var(--radius); padding: 4rem; box-shadow: var(--shadow); text-align: center; margin: 1rem 0; position: relative; overflow: hidden; }
+  .testimonial-card::before { content: '\201C'; font-family: 'Instrument Serif', serif; font-size: 12rem; color: rgba(255,255,255,0.05); position: absolute; top: -2rem; left: 2rem; line-height: 1; pointer-events: none; }
+  .testimonial-card blockquote { font-family: 'Instrument Serif', serif; font-style: italic; font-size: clamp(1.3rem, 2.5vw, 1.8rem); color: rgba(255,255,255,0.9); line-height: 1.5; margin-bottom: 2rem; max-width: 600px; margin-left: auto; margin-right: auto; position: relative; }
+  .testimonial-card .cite-name { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--amber); display: block; margin-bottom: 0.2rem; }
+  .testimonial-card .cite-loc { font-size: 0.8rem; color: rgba(255,255,255,0.4); }
+
+  /* CTA Row */
+  .cta-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0; }
+  .cta-card { background: var(--card); border-radius: var(--radius); padding: 3rem; box-shadow: var(--shadow); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; transition: transform 0.4s, box-shadow 0.4s; }
+  .cta-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .cta-card .label { color: var(--amber); margin-bottom: 0.8rem; }
+  .cta-card h3 { font-family: 'Instrument Serif', serif; font-size: 1.6rem; font-weight: 400; font-style: italic; margin-bottom: 1rem; }
+  .cta-card p { color: var(--muted); font-size: 0.85rem; max-width: 280px; margin-bottom: 1.5rem; }
+  .cta-btn { display: inline-block; padding: 0.7rem 2rem; border: 1px solid var(--green); color: var(--green); text-decoration: none; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 50px; transition: all 0.4s; }
+  .cta-btn:hover { background: var(--green); color: white; }
+  .cta-btn.filled { background: var(--green); color: white; border-color: var(--green); }
+  .cta-btn.filled:hover { background: var(--amber); border-color: var(--amber); color: white; }
+
+  .cta-card-accent { background: linear-gradient(135deg, var(--cream) 0%, #E8DFD0 100%); }
+  .cta-card-accent .icon { width: 48px; height: 48px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; margin-bottom: 1.2rem; }
+  .cta-card-accent .icon svg { width: 20px; height: 20px; color: white; }
+
+  /* Footer */
+  footer { padding: 2.5rem 0; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(0,0,0,0.06); margin-top: 4rem; }
+  footer span, footer a { font-size: 11px; font-weight: 500; color: var(--muted); text-decoration: none; letter-spacing: 0.03em; }
+  footer a:hover { color: var(--green); }
+  footer .links { display: flex; gap: 1.5rem; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.8s cubic-bezier(0.22,1,0.36,1), transform 0.8s cubic-bezier(0.22,1,0.36,1); }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Stagger */
+  .stagger-1 { transition-delay: 0.05s; }
+  .stagger-2 { transition-delay: 0.1s; }
+  .stagger-3 { transition-delay: 0.15s; }
+  .stagger-4 { transition-delay: 0.2s; }
+  .stagger-5 { transition-delay: 0.25s; }
+  .stagger-6 { transition-delay: 0.3s; }
+  .stagger-7 { transition-delay: 0.35s; }
+  .stagger-8 { transition-delay: 0.4s; }
+
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); grid-template-rows: auto; }
+    .bento-item:nth-child(1) { grid-column: span 2; grid-row: span 1; min-height: 300px; }
+    .bento-item:nth-child(6) { grid-column: span 2; }
+    .bento-item { min-height: 220px; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.2rem; }
+    nav ul { display: none; }
+    .container { padding: 0 1rem; }
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-text-card { padding: 2.5rem; }
+    .hero-text-card h1 { font-size: 2.8rem; }
+    .hero-image-card { min-height: 280px; }
+    .hero-stats { grid-template-columns: 1fr; }
+    .bento-grid { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .bento-item:nth-child(1) { grid-column: span 1; min-height: 300px; }
+    .bento-item:nth-child(6) { grid-column: span 1; }
+    .bento-item { min-height: 200px; }
+    .about-grid { grid-template-columns: 1fr; }
+    .about-image-card { min-height: 300px; }
+    .cta-row { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 1rem; text-align: center; }
+  }
+  @media (prefers-reduced-motion: reduce) { .reveal { opacity: 1; transform: none; } *, *::before, *::after { animation: none !important; transition-duration: 0.01ms !important; } }
+</style>
+</head>
+<body>
+
+<nav id="nav">
+  <a class="logo" href="#"><img src="/logo.jpg" alt="Rom Com Photographer PH"></a>
+  <ul>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <!-- Hero Bento -->
+  <section class="hero-bento">
+    <div class="hero-grid">
+      <div class="hero-text-card reveal">
+        <span class="label">Est. 2018 — Manila, Philippines</span>
+        <h1>Your RomCom<br>Moments <em>in Photos</em></h1>
+        <p>Cinematic, emotion-driven photography for couples who live their love story like a scene from their favorite movie.</p>
+      </div>
+      <div class="hero-image-card reveal stagger-1">
+        <img src="https://images.unsplash.com/photo-1516051662687-567d7c4e8f6a?auto=format&fit=crop&q=80&w=2000" alt="Couple">
+        <span class="badge">Now Booking 2025–2026</span>
+      </div>
+      <div class="hero-stats reveal stagger-2">
+        <div class="stat-card">
+          <div class="num">200+</div>
+          <div class="stat-label">Sessions</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">7</div>
+          <div class="stat-label">Years Active</div>
+        </div>
+        <div class="stat-card">
+          <div class="num">150+</div>
+          <div class="stat-label">Happy Couples</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Portfolio Bento Grid -->
+  <section class="portfolio-section" id="portfolio">
+    <div class="section-header reveal">
+      <h2>The Gallery</h2>
+      <span class="label">Selected Works</span>
+    </div>
+    <div class="bento-grid">
+      <div class="bento-item reveal stagger-1">
+        <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=1200" alt="Rainy Day Romance">
+        <div class="overlay"><h3>Rainy Day Romance</h3><span>Everyday</span></div>
+      </div>
+      <div class="bento-item reveal stagger-2">
+        <img src="https://images.unsplash.com/photo-1522673607200-1648832cee98?auto=format&fit=crop&q=80&w=800" alt="Golden Hour">
+        <div class="overlay"><h3>Golden Hour</h3><span>Lifestyle</span></div>
+      </div>
+      <div class="bento-item reveal stagger-3">
+        <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&q=80&w=800" alt="Quiet Mornings">
+        <div class="overlay"><h3>Quiet Mornings</h3><span>Home Sessions</span></div>
+      </div>
+      <div class="bento-item reveal stagger-4">
+        <img src="https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&q=80&w=800" alt="A Decade Together">
+        <div class="overlay"><h3>A Decade Together</h3><span>Anniversary</span></div>
+      </div>
+      <div class="bento-item reveal stagger-5">
+        <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=800" alt="The Space Between">
+        <div class="overlay"><h3>The Space Between</h3><span>Intimate</span></div>
+      </div>
+      <div class="bento-item reveal stagger-6">
+        <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&q=80&w=1200" alt="Afternoon Sun">
+        <div class="overlay"><h3>Afternoon Sun</h3><span>Everyday</span></div>
+      </div>
+      <div class="bento-item reveal stagger-7">
+        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&q=80&w=800" alt="New Chapter">
+        <div class="overlay"><h3>New Chapter</h3><span>Anniversary</span></div>
+      </div>
+      <div class="bento-item reveal stagger-8">
+        <img src="https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=80&w=800" alt="Whispers">
+        <div class="overlay"><h3>Whispers</h3><span>Intimate</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Bento -->
+  <section class="about-bento reveal" id="about">
+    <div class="about-grid">
+      <div class="about-text-card">
+        <span class="label">The Storyteller</span>
+        <h2>Chasing the light, finding the feeling.</h2>
+        <p>I've always been obsessed with the way movies make us feel. That specific magic when the light, the silence, and the emotion align to tell a story that stays with you.</p>
+        <p>That's how I approach photography. I'm not looking for the perfect pose; I'm looking for the perfect feeling. The one that makes you catch your breath years from now.</p>
+        <p style="margin-top: 1.5rem;"><span class="label" style="color: var(--muted);">Based in Manila, Philippines</span></p>
+      </div>
+      <div class="about-image-card">
+        <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&q=80&w=1500" alt="Chris">
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonial -->
+  <div class="testimonial-card reveal">
+    <blockquote>"Chris has an incredible way of making you forget the camera is even there. Our photos look like stills from our favorite romantic movie."</blockquote>
+    <span class="cite-name">Sofia & Marco</span>
+    <span class="cite-loc">Manila, 2023</span>
+  </div>
+
+  <!-- CTA Bento -->
+  <section id="contact">
+    <div class="cta-row reveal">
+      <div class="cta-card">
+        <span class="label">Get in Touch</span>
+        <h3>Let's Tell Your Story</h3>
+        <p>Every love story deserves to be told beautifully. Let's start with yours.</p>
+        <a href="mailto:hello@romcomph.com" class="cta-btn filled">Book a Session</a>
+      </div>
+      <div class="cta-card cta-card-accent">
+        <div class="icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+        </div>
+        <span class="label">Quick Inquiry</span>
+        <h3>Have Questions?</h3>
+        <p>Curious about packages, availability, or how a session works? Reach out anytime.</p>
+        <a href="mailto:hello@romcomph.com" class="cta-btn">Send a Message</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <span>&copy; 2025 Rom Com Photographer PH</span>
+    <div class="links"><a href="#">Instagram</a><a href="#">Facebook</a></div>
+  </footer>
+
+</div>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+  reveals.forEach(el => obs.observe(el));
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 60));
+</script>
+</body>
+</html>

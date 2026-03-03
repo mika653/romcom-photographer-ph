@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rom Com Photographer PH — Minimalist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green: #1C3D2A;
+    --cream: #F5F0E8;
+    --text: #2A2A2A;
+    --faint: #C8C0B4;
+    --hairline: rgba(0,0,0,0.06);
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--text);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    font-weight: 400;
+    line-height: 1.8;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* ── Typography ── */
+  .display {
+    font-family: 'Cormorant', serif;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .cap {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    font-weight: 400;
+    color: var(--faint);
+  }
+
+  .body-text {
+    font-size: 0.95rem;
+    line-height: 2;
+    color: #6B6560;
+    max-width: 520px;
+  }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 100;
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  nav.scrolled {
+    background: rgba(245, 240, 232, 0.85);
+    backdrop-filter: blur(30px);
+    padding: 1.2rem 3rem;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  nav .logo img {
+    height: 36px;
+    width: auto;
+    opacity: 0.9;
+    transition: opacity 0.5s;
+  }
+
+  nav .logo img:hover { opacity: 1; }
+
+  nav .nav-links {
+    display: flex;
+    gap: 3rem;
+    list-style: none;
+  }
+
+  nav .nav-links a {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--faint);
+    transition: color 0.5s;
+    position: relative;
+  }
+
+  nav .nav-links a:hover,
+  nav .nav-links a.active {
+    color: var(--green);
+  }
+
+  /* ── Sections ── */
+  section { padding: 0 3rem; }
+
+  .section-spacer { height: 12vh; }
+  .section-spacer-lg { height: 20vh; }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding-bottom: 8vh;
+  }
+
+  .hero-text {
+    margin-bottom: 6vh;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.5rem, 10vw, 9rem);
+  }
+
+  .hero .tagline {
+    margin-top: 2rem;
+    display: inline-block;
+  }
+
+  .hero-image {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-image img {
+    width: 100%;
+    height: 70vh;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(15%);
+    transition: filter 1.5s;
+  }
+
+  .hero-image:hover img {
+    filter: grayscale(0%);
+  }
+
+  .hero-image-caption {
+    position: absolute;
+    bottom: 2rem;
+    right: 2rem;
+  }
+
+  /* ── Divider ── */
+  .divider {
+    width: 100%;
+    height: 1px;
+    background: var(--hairline);
+    margin: 0 3rem;
+    max-width: calc(100% - 6rem);
+  }
+
+  /* ── About ── */
+  .about {
+    max-width: 640px;
+    margin: 0 auto;
+    text-align: left;
+  }
+
+  .about h2 {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    margin-bottom: 3rem;
+  }
+
+  .about p + p { margin-top: 1.5rem; }
+
+  /* ── Portfolio ── */
+  .portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 6rem;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .portfolio-header h2 {
+    font-size: clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .portfolio-item {
+    max-width: 900px;
+    margin: 0 auto 10vh;
+    position: relative;
+  }
+
+  .portfolio-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: grayscale(20%);
+    transition: filter 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .portfolio-item:hover img {
+    filter: grayscale(0%);
+  }
+
+  .portfolio-item .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--hairline);
+  }
+
+  .portfolio-item .meta .title {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+
+  .portfolio-item .meta .number {
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--faint);
+  }
+
+  /* ── Testimonial ── */
+  .testimonial {
+    max-width: 700px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .testimonial blockquote {
+    font-family: 'Cormorant', serif;
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+    line-height: 1.4;
+    color: var(--text);
+    margin-bottom: 2.5rem;
+  }
+
+  .testimonial cite {
+    font-style: normal;
+    display: block;
+  }
+
+  .testimonial .cite-name {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 0.85rem;
+    color: var(--text);
+    margin-bottom: 0.3rem;
+  }
+
+  /* ── CTA ── */
+  .cta {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .cta h2 {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    margin-bottom: 2rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    padding: 1rem 3rem;
+    border: 1px solid var(--green);
+    color: var(--green);
+    font-family: 'Libre Baskerville', serif;
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .cta-button:hover {
+    background: var(--green);
+    color: var(--cream);
+  }
+
+  /* ── Footer ── */
+  footer {
+    padding: 4rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--hairline);
+    margin-top: 4rem;
+  }
+
+  footer .footer-left {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--faint);
+  }
+
+  footer .footer-right {
+    display: flex;
+    gap: 2rem;
+  }
+
+  footer .footer-right a {
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    color: var(--faint);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.4s;
+  }
+
+  footer .footer-right a:hover { color: var(--green); }
+
+  /* ── Fade-in animation ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+                transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    section { padding: 0 1.5rem; }
+    nav { padding: 1.5rem; }
+    nav.scrolled { padding: 1rem 1.5rem; }
+
+    nav .nav-links { display: none; }
+
+    .hero { padding-bottom: 4vh; }
+    .hero-image img { height: 50vh; }
+
+    .section-spacer { height: 8vh; }
+    .section-spacer-lg { height: 12vh; }
+
+    .divider { margin: 0 1.5rem; max-width: calc(100% - 3rem); }
+
+    footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav id="nav">
+  <a href="#" class="logo">
+    <img src="/logo.jpg" alt="Rom Com Photographer PH">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#work" class="active">Work</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-text reveal">
+    <p class="cap" style="margin-bottom: 1.5rem;">Your RomCom Moments in Photos</p>
+    <h1 class="display">Love,<br>Quietly<br>Told.</h1>
+  </div>
+</section>
+
+<section>
+  <div class="hero-image reveal">
+    <img src="https://images.unsplash.com/photo-1516051662687-567d7c4e8f6a?auto=format&fit=crop&q=80&w=2000" alt="Couple with coffee">
+    <span class="cap hero-image-caption">Manila, 2024</span>
+  </div>
+</section>
+
+<div class="section-spacer-lg"></div>
+<div class="divider"></div>
+<div class="section-spacer-lg"></div>
+
+<!-- About -->
+<section class="about reveal" id="about">
+  <p class="cap" style="margin-bottom: 2rem;">About</p>
+  <h2 class="display">I look for the feeling, not the pose.</h2>
+  <p class="body-text">
+    I've always been obsessed with the way movies make us feel. That specific magic when the light, the silence, and the emotion align to tell a story that stays with you.
+  </p>
+  <p class="body-text">
+    That's how I approach photography. I'm not looking for the perfect frame. I'm looking for the perfect feeling. The one that makes you catch your breath when you look back at it years from now.
+  </p>
+  <p class="body-text" style="margin-top: 3rem;">
+    <span class="cap">Based in Manila, Philippines</span>
+  </p>
+</section>
+
+<div class="section-spacer-lg"></div>
+
+<!-- About Image -->
+<section class="reveal">
+  <div style="max-width: 700px; margin: 0 auto;">
+    <img src="https://images.unsplash.com/photo-1554048612-b6a482bc67e5?auto=format&fit=crop&q=80&w=1500" alt="Chris" style="width: 100%; height: auto; display: block; filter: grayscale(20%);">
+    <div style="margin-top: 1rem; display: flex; justify-content: space-between;">
+      <span class="cap">Chris — Lead Storyteller</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-spacer-lg"></div>
+<div class="divider"></div>
+<div class="section-spacer-lg"></div>
+
+<!-- Portfolio -->
+<section id="work">
+  <div class="portfolio-header reveal">
+    <h2 class="display">Selected Work</h2>
+    <span class="cap">2020 — 2025</span>
+  </div>
+
+  <div class="portfolio-item reveal">
+    <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&fit=crop&q=80&w=1200" alt="Rainy Day Romance">
+    <div class="meta">
+      <span class="title">Rainy Day Romance</span>
+      <span class="cap number">01</span>
+    </div>
+  </div>
+
+  <div class="portfolio-item reveal">
+    <img src="https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&q=80&w=1200" alt="Quiet Mornings">
+    <div class="meta">
+      <span class="title">Quiet Mornings</span>
+      <span class="cap number">02</span>
+    </div>
+  </div>
+
+  <div class="portfolio-item reveal">
+    <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&q=80&w=1200" alt="The Space Between">
+    <div class="meta">
+      <span class="title">The Space Between</span>
+      <span class="cap number">03</span>
+    </div>
+  </div>
+</section>
+
+<div class="section-spacer-lg"></div>
+<div class="divider"></div>
+<div class="section-spacer-lg"></div>
+
+<!-- Testimonial -->
+<section class="testimonial reveal">
+  <blockquote>
+    "Chris has an incredible way of making you forget the camera is even there. Our photos look like stills from our favorite romantic movie."
+  </blockquote>
+  <cite>
+    <span class="cite-name">Sofia & Marco</span>
+    <span class="cap">Manila, 2023</span>
+  </cite>
+</section>
+
+<div class="section-spacer-lg"></div>
+<div class="divider"></div>
+<div class="section-spacer-lg"></div>
+
+<!-- CTA -->
+<section class="cta reveal" id="contact">
+  <p class="cap" style="margin-bottom: 2rem;">Now Booking 2025 — 2026</p>
+  <h2 class="display">Let's tell your story.</h2>
+  <p class="body-text" style="margin: 0 auto 3rem; text-align: center;">
+    Currently accepting a limited number of sessions.
+  </p>
+  <a href="mailto:hello@romcomph.com" class="cta-button">Get in Touch</a>
+</section>
+
+<div class="section-spacer-lg"></div>
+
+<!-- Footer -->
+<footer>
+  <span class="footer-left">&copy; 2025 Rom Com Photographer PH</span>
+  <div class="footer-right">
+    <a href="#">Instagram</a>
+    <a href="#">Facebook</a>
+  </div>
+</footer>
+
+<script>
+  // Scroll-triggered reveals
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+</body>
+</html>

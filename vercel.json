@@ -1,5 +1,6 @@
 {
   "rewrites": [
+    { "source": "/mockups/:path*", "destination": "/mockups/:path*" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
