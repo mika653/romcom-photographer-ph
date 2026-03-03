@@ -461,7 +461,7 @@ function HomePage() {
 
 const PORTFOLIO_ITEMS = [
   { id: "ev-1", cat: "Everyday", img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac", caption: "The quiet magic of a shared morning." },
-  { id: "ls-1", cat: "Lifestyle", img: "https://images.unsplash.com/photo-1522673607200-1648832cee98", caption: "Finding beauty in the ordinary rhythm." },
+  { id: "ls-1", cat: "Lifestyle", img: "https://images.unsplash.com/photo-1543168256-418811576931", caption: "Finding beauty in the ordinary rhythm." },
   { id: "an-1", cat: "Anniversaries", img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b", caption: "A decade of love, captured in a glance." },
   { id: "in-1", cat: "Intimate", img: "https://images.unsplash.com/photo-1519225421980-715cb0215aed", caption: "The space between breaths." },
   { id: "ev-2", cat: "Everyday", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952", caption: "Unscripted laughter in the afternoon sun." },
