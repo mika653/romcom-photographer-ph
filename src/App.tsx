@@ -139,8 +139,8 @@ export default function App() {
               className="h-16 w-auto object-contain brightness-0 invert mb-8"
             />
             <p className="text-white/70 text-sm leading-relaxed max-w-sm font-light">
-              We don't just take pictures. We craft cinematic memories that feel
-              like the best parts of your favorite love story.
+              We don't just take pictures. We stop the world for a moment
+              and make it yours — like the best scene in your favorite film.
             </p>
           </div>
           <div className="md:col-span-3 flex flex-col space-y-4 text-[11px] uppercase tracking-[0.35em] font-bold text-white/70">
@@ -291,9 +291,9 @@ function HomePage() {
                 </span>
               </h2>
               <p className="text-editorial-serif text-brand-muted mb-20 max-w-lg">
-                We believe that the most beautiful parts of a love story aren't
-                the ones that are posed. They're the quiet glances, the messy
-                laughs, and the raw emotion that happens between the frames.
+                We don't want the world to see you — we just want you to know
+                who you are. The quiet glances, the messy laughs, the raw
+                emotion that happens between the frames.
               </p>
               <Link
                 to="/about"
@@ -441,9 +441,9 @@ function HomePage() {
             Begin Your Story
           </span>
           <h2 className="text-8xl md:text-[14vw] text-editorial-title mb-24 text-white font-light">
-            Let's Make <br />
+            Stop the World <br />
             <span className="italic font-light opacity-30 text-white">
-              Magic
+              & Melt With You
             </span>
           </h2>
           <Link
@@ -465,13 +465,13 @@ function HomePage() {
 
 const PORTFOLIO_ITEMS = [
   { id: "ev-1", cat: "Everyday", img: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac", caption: "The quiet magic of a shared morning." },
-  { id: "ls-1", cat: "Lifestyle", img: "https://images.unsplash.com/photo-1543168256-418811576931", caption: "Finding beauty in the ordinary rhythm." },
+  { id: "ls-1", cat: "Lifestyle", img: "https://images.unsplash.com/photo-1543168256-418811576931", caption: "Slide a little closer, let the world blur out." },
   { id: "an-1", cat: "Anniversaries", img: "https://images.unsplash.com/photo-1469334031218-e382a71b716b", caption: "A decade of love, captured in a glance." },
   { id: "in-1", cat: "Intimate", img: "https://images.unsplash.com/photo-1519225421980-715cb0215aed", caption: "The space between breaths." },
-  { id: "ev-2", cat: "Everyday", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952", caption: "Unscripted laughter in the afternoon sun." },
+  { id: "ev-2", cat: "Everyday", img: "https://images.unsplash.com/photo-1517048676732-d65bc937f952", caption: "And I don't want the world to see us — just this." },
   { id: "ls-2", cat: "Lifestyle", img: "https://images.unsplash.com/photo-1531747056595-07f6cbbe10ad", caption: "Chasing shadows across the city streets." },
   { id: "an-2", cat: "Anniversaries", img: "https://images.unsplash.com/photo-1519741497674-611481863552", caption: "Every year a new chapter, every frame a memory." },
-  { id: "in-2", cat: "Intimate", img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7", caption: "Whispers that only the heart can hear." },
+  { id: "in-2", cat: "Intimate", img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7", caption: "Here is gone, but this moment stays forever." },
 ];
 
 function PortfolioPage() {
@@ -652,7 +652,7 @@ function AboutPage() {
             {[
               {
                 title: "The Connection",
-                desc: "We don't start with cameras. We start with a conversation. I want to know what makes your love yours.",
+                desc: "We don't start with cameras. We start with a conversation — I want to know your name, your story, what makes your love yours.",
               },
               {
                 title: "The Atmosphere",
@@ -842,7 +842,7 @@ function ContactPage() {
                   htmlFor="contact-story"
                   className="absolute left-0 top-5 text-editorial-cap text-brand-muted pointer-events-none transition-all duration-700 peer-focus:-top-6 peer-focus:text-brand-accent peer-[:not(:placeholder-shown)]:-top-6"
                 >
-                  Tell us your story
+                  Tell us everything you want the world to know
                 </label>
               </div>
               <button
