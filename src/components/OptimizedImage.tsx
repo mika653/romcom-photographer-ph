@@ -6,17 +6,15 @@ interface OptimizedImageProps {
   alt: string;
   className?: string;
   imgClassName?: string;
-  referrerPolicy?: "no-referrer" | "no-referrer-when-downgrade" | "origin" | "origin-when-cross-origin" | "same-origin" | "strict-origin" | "strict-origin-when-cross-origin" | "unsafe-url";
   priority?: boolean;
 }
 
-export function OptimizedImage({ 
-  src, 
-  alt, 
-  className = "", 
+export function OptimizedImage({
+  src,
+  alt,
+  className = "",
   imgClassName = "",
-  referrerPolicy = "no-referrer",
-  priority = false 
+  priority = false
 }: OptimizedImageProps) {
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -39,7 +37,7 @@ export function OptimizedImage({
         alt={alt}
         loading={priority ? "eager" : "lazy"}
         onLoad={() => setIsLoaded(true)}
-        referrerPolicy={referrerPolicy}
+        onError={() => setIsLoaded(true)}
         className={`w-full h-full object-cover transition-all duration-1000 ${imgClassName} ${
           isLoaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-105 blur-lg"
         }`}

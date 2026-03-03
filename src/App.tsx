@@ -39,7 +39,7 @@ export default function App() {
         <div className="max-w-[1800px] mx-auto px-8 md:px-16 flex justify-between items-center">
           <Link to="/" className="group flex items-center space-x-4">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Rom Com Photographer PH"
               className={`h-10 md:h-12 w-auto object-contain transition-all duration-700 ${!scrolled && isHome ? "brightness-0 invert" : ""}`}
             />
@@ -134,7 +134,7 @@ export default function App() {
         <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-12 gap-24">
           <div className="md:col-span-5">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Rom Com Photographer PH"
               className="h-16 w-auto object-contain brightness-0 invert mb-8"
             />
@@ -307,8 +307,8 @@ function HomePage() {
           <div className="lg:col-span-7 order-1 lg:order-2">
             <div className="image-reveal aspect-[16/11] shadow-[0_40px_100px_-20px_rgba(28,61,42,0.15)]">
               <OptimizedImage
-                src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&q=80&w=1500"
-                alt="Intimate Laugh"
+                src="https://images.unsplash.com/photo-1529333166437-7750a6dd5a70?auto=format&fit=crop&q=80&w=1500"
+                alt="Couple Laughing Together"
                 className="w-full h-full"
               />
             </div>
